@@ -24,17 +24,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        Map<String,String> validationErrors = new HashMap<>();
+        Map<String, String> validationErrors = new HashMap<>();
         List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 
         validationErrorList.parallelStream()
-                .forEach((error)->{
-                    String fieldName = ((FieldError)error).getField();
-                    String errorMessage=error.getDefaultMessage();
-                    validationErrors.put(fieldName,errorMessage);
+                .forEach((error) -> {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    validationErrors.put(fieldName, errorMessage);
                 });
 
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrors);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

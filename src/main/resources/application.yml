@@ -4,3 +4,25 @@ spring:
 
 server:
   port: 8092
+
+api:
+  info:
+    title: Rest API Documentation
+    description: To check basic impl of REST API in spring-boot
+    version: v1
+    contact:
+      name: Likhith
+      email: abc@gmail.com
+      url: https://www.google.com
+    license:
+      name: Apache 2.0
+      url: https://www.google.com
+
+management:
+  server:
+    port: 9092
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
