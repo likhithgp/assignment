@@ -48,6 +48,8 @@ Instruction Run the service locally
 # REST Endpoint Details
 
 * **Swagger Endpoint for local**: http://localhost:8092/swagger-ui/index.html
+
+
 ## 1️⃣ Health Check
 
 **Endpoint**
