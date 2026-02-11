@@ -45,6 +45,148 @@ Instruction Run the service locally
 * **To build**: docker build -t assignment .
 * **To run Docker image**: docker run -p 8092:8092 assignment
 
+# REST Endpoint Details
+
+## 1️⃣ Health Check
+
+**Endpoint**
+
+```
+GET /health
+```
+
+**Description**
+
+Returns the current status of the application.  
+Used for uptime monitoring, load balancer checks, and container orchestration liveness/readiness probes.
+
+**Response Example**
+
+```json
+{
+  "status": "UP",
+  "timestamp": "2026-02-11T10:15:30Z"
+}
+```
+
+**HTTP Status Codes**
+
+- `200 OK` – Application is running successfully.
+
+**Production Note**
+
+In a real production environment, this endpoint would typically be replaced or supplemented with:
+
+```
+/actuator/health
+```
+
+Using Spring Boot Actuator for deeper health diagnostics (database, disk space, external dependencies, etc.).
+
+---
+
+## 2️⃣ Data Processor
+
+**Endpoint**
+
+```
+POST /example
+```
+
+**Description**
+
+Processes incoming user data and returns a success response with a generated request identifier.
+
+This endpoint demonstrates:
+- Input validation
+- Business layer delegation
+- Unique request tracking
+- Standardized response structure
+
+---
+
+### Request Body
+
+```json
+{
+  "userId": "123",
+  "value": 42
+}
+```
+
+### Request Field Details
+
+- **userId** (String, required)  
+  Unique identifier of the user.
+
+- **value** (Integer, required)  
+  Numeric value to be processed by the service.
+
+Validation is enforced using Jakarta Validation annotations.
+
+---
+
+### Response Body
+
+```json
+{
+  "status": "SUCCESS",
+  "requestId": "uuid-string"
+}
+```
+
+### Response Field Details
+
+- **status**  
+  Indicates processing result. (e.g., `SUCCESS`)
+
+- **requestId**  
+  A generated UUID used for request tracing and observability.
+
+---
+
+### HTTP Status Codes
+
+- `200 OK` – Request processed successfully.
+- `400 Bad Request` – Invalid input payload.
+- `500 Internal Server Error` – Unexpected system error.
+
+---
+
+## Error Response Format
+
+In case of validation or application errors, the service returns a standardized error structure:
+
+```json
+{
+  "timestamp": "2026-02-11T10:15:30Z",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Validation failed",
+  "path": "/example"
+}
+```
+
+This ensures:
+
+- Consistent error contracts
+- Clean client-side handling
+- No exposure of internal stack traces
+
+---
+
+## Design Principles Applied to Endpoints
+
+- Thin controllers, delegated business logic.
+- Explicit request/response DTOs.
+- Centralized exception handling.
+- Input validation at boundary.
+- Traceable responses with request identifiers.
+- Production-ready HTTP semantics.
+
+---
+
+These endpoints are intentionally minimal but structured to reflect how real-world production microservices should be implemented.
 
 
 # Design Decisions
