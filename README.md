@@ -68,8 +68,7 @@ Used for uptime monitoring, load balancer checks, and container orchestration li
 
 ```json
 {
-  "status": "UP",
-  "timestamp": "2026-02-11T10:15:30Z"
+  "status": "UP"
 }
 ```
 
