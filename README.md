@@ -47,12 +47,13 @@ Instruction Run the service locally
 
 # REST Endpoint Details
 
+* **Swagger Endpoint for local**: http://localhost:8092/swagger-ui/index.html
 ## 1️⃣ Health Check
 
 **Endpoint**
 
 ```
-GET /health
+GET api/v1/health
 ```
 
 **Description**
@@ -90,7 +91,7 @@ Using Spring Boot Actuator for deeper health diagnostics (database, disk space, 
 **Endpoint**
 
 ```
-POST /example
+POST api/v1/example
 ```
 
 **Description**
