@@ -1,7 +1,7 @@
 #Sample stater Project - Assignment
-[![Java CI](https://github.com/likhithgp/Stockwatch/actions/workflows/maven.yml/badge.svg)](https://github.com/likhithgp/Stockwatch/actions/workflows/maven.yml)
-![Static Badge](https://img.shields.io/badge/3.1.5-likhith?style=plastic&logo=springboot&logoColor=green&label=Springboot)
-![Static Badge](https://img.shields.io/badge/17-likhith?style=plastic&label=Java&labelColor=orange&color=black)
+[![Java CI](https://github.com/likhithgp/Stockwatch/actions/workflows/maven.yml/badge.svg)](https://github.com/likhithgp/assignment/actions/workflows/servicebuild.yml)
+![Static Badge](https://img.shields.io/badge/3.4.2-likhith?style=plastic&logo=springboot&logoColor=green&label=Springboot)
+![Static Badge](https://img.shields.io/badge/21-likhith?style=plastic&label=Java&labelColor=orange&color=black)
 This Project Contains simple API POST and GET HTTP endpoints with OpenAPI doc(Swagger).
 
 ---
