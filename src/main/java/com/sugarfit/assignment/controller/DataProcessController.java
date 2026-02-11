@@ -5,6 +5,7 @@ import com.sugarfit.assignment.model.User;
 import com.sugarfit.assignment.model.UserRequestDto;
 import com.sugarfit.assignment.model.UserResponseDto;
 import com.sugarfit.assignment.service.UserService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,6 +43,7 @@ public class DataProcessController {
             description = "User created success"
     )
     @PostMapping(UserConstants.SAVE_ENDPOINT)
+    @RateLimiter(name = "userService", fallbackMethod = "rateLimiterFallback")
     public ResponseEntity<UserResponseDto> saveUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         log.info("User Data received at save Endpoint");
         String uuid = userService.saveUser(userRequestDto);
@@ -95,11 +97,20 @@ public class DataProcessController {
             ),
     })
     @GetMapping(UserConstants.HEALTH_CHECK)
+    @RateLimiter(name = "userService", fallbackMethod = "rateLimiterFallback")
     public ResponseEntity<Object> healthCheck() {
 
         log.debug("Health check called");
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(Map.of("Status", "UP"));
+                .body(Map.of("status", "UP"));
+    }
+
+    // This method runs when the user exceeds the rate limit
+    public ResponseEntity<String> rateLimiterFallback(Exception e) {
+        log.warn("Rate limit exceeded!");
+        return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .body("Too many requests - please try again later.");
     }
 }

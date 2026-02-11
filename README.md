@@ -49,6 +49,7 @@ Instruction Run the service locally
 
 * **Swagger Endpoint for local**: http://localhost:8092/swagger-ui/index.html
 
+* **Note: Rate limiter is implemented for POST api/v1/example and GET GET api/v1/health only 5 request allowed in 10 secs**
 
 ## 1️⃣ Health Check
 
@@ -78,13 +79,13 @@ Used for uptime monitoring, load balancer checks, and container orchestration li
 
 **Production Note**
 
-In a real production environment, this endpoint would typically be replaced or supplemented with:
+In production, this endpoint can be extended using:
 
 ```
 /actuator/health
 ```
 
-Using Spring Boot Actuator for deeper health diagnostics (database, disk space, external dependencies, etc.).
+For deeper health diagnostics (database, disk space, external dependencies, etc.).
 
 ---
 
@@ -105,6 +106,41 @@ This endpoint demonstrates:
 - Business layer delegation
 - Unique request tracking
 - Standardized response structure
+- Rate limiting for production protection
+
+---
+
+## 🚦 Rate Limiting
+
+To protect the service in high-traffic environments:
+
+- A **rate limiter is implemented**
+- Maximum **5 requests**
+- Within a **10-second window**
+- Per client (IP/user depending on implementation)
+
+If the rate limit is exceeded, the API returns:
+
+```
+HTTP 429 – Too Many Requests
+```
+
+### Rate Limit Exceeded Response Example
+
+```json
+{
+  "timestamp": "2026-02-11T10:15:30Z",
+  "status": 429,
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please try again later.",
+  "path": "/example"
+}
+```
+
+This ensures:
+- Protection against abuse
+- Stability under traffic spikes
+- Fair usage enforcement
 
 ---
 
@@ -141,7 +177,7 @@ Validation is enforced using Jakarta Validation annotations.
 ### Response Field Details
 
 - **status**  
-  Indicates processing result. (e.g., `SUCCESS`)
+  Indicates processing result (e.g., `SUCCESS`).
 
 - **requestId**  
   A generated UUID used for request tracing and observability.
@@ -152,13 +188,14 @@ Validation is enforced using Jakarta Validation annotations.
 
 - `200 OK` – Request processed successfully.
 - `400 Bad Request` – Invalid input payload.
+- `429 Too Many Requests` – Rate limit exceeded.
 - `500 Internal Server Error` – Unexpected system error.
 
 ---
 
 ## Error Response Format
 
-In case of validation or application errors, the service returns a standardized error structure:
+All errors follow a standardized structure:
 
 ```json
 {
@@ -175,22 +212,23 @@ This ensures:
 - Consistent error contracts
 - Clean client-side handling
 - No exposure of internal stack traces
+- Production-grade API standards
 
 ---
 
 ## Design Principles Applied to Endpoints
 
-- Thin controllers, delegated business logic.
+- Thin controllers with delegated business logic.
 - Explicit request/response DTOs.
 - Centralized exception handling.
-- Input validation at boundary.
+- Boundary validation using Jakarta Validation.
+- Rate limiting for traffic protection.
 - Traceable responses with request identifiers.
 - Production-ready HTTP semantics.
 
 ---
 
-These endpoints are intentionally minimal but structured to reflect how real-world production microservices should be implemented.
-
+These endpoints are intentionally minimal but structured to reflect how real-world production microservices should be implemented and operated.
 
 # Design Decisions
 ------------------------
@@ -268,6 +306,20 @@ To ensure maintainability, scalability, and clear ownership across multiple engi
     - Horizontal scalability in high-traffic production systems.
 
 - The service is designed to be **stateless**, making it suitable for scaling behind a load balancer.
+
+---
+
+## Rate Limiting
+
+To make the service production-ready for high-traffic environments:
+
+- Implemented **rate limiting** on critical endpoints.
+- Allows **5 requests per 10 seconds** per client.
+- Returns `HTTP 429 – Too Many Requests` when the limit is exceeded.
+- Protects against abuse and traffic spikes.
+- Improves system stability and fairness.
+
+This ensures the service can survive real-world usage patterns and prevents cascading failures under sudden load.
 
 ---
 

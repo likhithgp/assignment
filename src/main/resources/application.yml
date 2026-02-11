@@ -26,3 +26,11 @@ management:
       exposure:
         include: health,info
       base-path: /actuator
+
+resilience4j:
+  ratelimiter:
+    instances:
+      userService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0s
